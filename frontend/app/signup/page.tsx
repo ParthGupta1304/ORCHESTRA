@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Lock, Mail, User, Music, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -40,6 +41,36 @@ export default function SignupPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch('http://localhost:8000/api/auth/google', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential }),
+      });
+      const data = await res.json();
+      
+      if (data.success && data.data.token) {
+        localStorage.setItem('orchestra_token', data.data.token);
+        localStorage.setItem('orchestra_user', JSON.stringify(data.data.user));
+        router.push('/dashboard');
+      } else {
+        setError(data.error || 'Authentication failed. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setError("Google Sign-In was unsuccessful. Try again later.");
   };
 
   return (
@@ -119,6 +150,26 @@ export default function SignupPage() {
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
           </button>
         </form>
+
+        <div className="relative my-8 w-full">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-white/10" />
+          </div>
+          <div className="relative flex justify-center text-xs text-gray-400 uppercase">
+            <span className="bg-[#111] px-2">Or continue with</span>
+          </div>
+        </div>
+
+        <div className="w-full flex justify-center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
+            theme="filled_black"
+            size="large"
+            shape="rectangular"
+            text="signup_with"
+          />
+        </div>
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{' '}
