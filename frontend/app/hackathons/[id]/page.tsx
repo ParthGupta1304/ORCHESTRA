@@ -70,7 +70,7 @@ export default function HackathonDetailPage() {
             <BarChart3 className="w-8 h-8 text-purple-400" />
             <h1 className="text-3xl md:text-4xl font-bold gradient-text">Hackathon Leaderboard</h1>
           </div>
-          <p className="text-gray-500 text-lg">Rankings for this hackathon, evaluated by the Orchestra AI pipeline.</p>
+          <p className="text-lightgray-500 text-lg">Rankings for this hackathon, evaluated by the Orchestra AI pipeline.</p>
         </motion.div>
 
         {loading ? (
