@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Loader2, Target, CheckCircle, AlertTriangle, ShieldAlert, Edit3, X, Save, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Loader2, Target, CheckCircle, AlertTriangle, ShieldAlert, Edit3, X, Save, ExternalLink, Download } from 'lucide-react';
 import Link from 'next/link';
 
 interface Override {
@@ -55,6 +55,19 @@ export default function ResultDetailsPage() {
   const [overrideJudge, setOverrideJudge] = useState('');
   const [overrideSaving, setOverrideSaving] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
+
+  const handleDownloadReport = () => {
+    if (!data || !data.feedback_report) return;
+    const blob = new Blob([data.feedback_report], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.team_name.replace(/\s+/g, '_')}_Feedback_Report.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     const pathParts = window.location.pathname.split('/');
@@ -348,9 +361,17 @@ export default function ResultDetailsPage() {
 
             {/* Feedback Report */}
             <div className="glass-card p-6">
-              <h2 className="text-lg font-bold flex items-center gap-2 mb-6">
-                <CheckCircle className="w-5 h-5 text-green-400" /> Feedback Report
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-400" /> Feedback Report
+                </h2>
+                <button
+                  onClick={handleDownloadReport}
+                  className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-400 bg-purple-400/10 hover:bg-purple-400/20 rounded-lg transition-colors border border-purple-400/20"
+                >
+                  <Download className="w-4 h-4" /> Download
+                </button>
+              </div>
               <div className="markdown-content">
                 {renderMarkdown(data.feedback_report || '')}
               </div>
