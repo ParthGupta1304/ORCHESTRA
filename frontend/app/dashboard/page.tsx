@@ -24,9 +24,16 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem('orchestra_token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+    const headers = { 'Authorization': `Bearer ${token}` };
+
     Promise.all([
       fetch('http://localhost:8000/api/stats').then(r => r.json()),
-      fetch('http://localhost:8000/api/hackathons').then(r => r.json()),
+      fetch('http://localhost:8000/api/organizer/hackathons', { headers }).then(r => r.json()),
     ])
       .then(([statsRes, hackRes]) => {
         if (statsRes.success) setStats(statsRes.data);

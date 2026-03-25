@@ -5,6 +5,26 @@ const multer = require('multer');
 const crypto = require('crypto');
 const fs = require('fs');
 const csvParser = require('csv-parser');
+const { OAuth2Client } = require('google-auth-library');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+const GOOGLE_CLIENT_ID = (process.env.GOOGLE_CLIENT_ID || 'placeholder_client_id').trim();
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback_secret_for_development';
+const oauthClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (!token) return res.status(401).json({ success: false, error: 'Unauthorized' });
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ success: false, error: 'Forbidden' });
+    req.user = user;
+    next();
+  });
+}
 
 const { submitSchema } = require('./models/schemas');
 const { orchestrate } = require('./pipeline/orchestrator');
@@ -19,7 +39,88 @@ const db = require('./db/database');
 
 const activeJobs = {}; // In-memory dictionary tracking batch process status
 
-app.post('/api/hackathon/upload', upload.single('csv_file'), async (req, res) => {
+app.post('/api/auth/google', async (req, res) => {
+  try {
+    const { token } = req.body;
+    const ticket = await oauthClient.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    
+    const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
+    let user = stmt.get(payload.email);
+    
+    if (!user) {
+      const user_id = crypto.randomUUID();
+      db.prepare(`
+        INSERT INTO users (id, email, name, picture, created_at)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(user_id, payload.email, payload.name, payload.picture, new Date().toISOString());
+      user = { id: user_id, email: payload.email, name: payload.name, picture: payload.picture };
+    }
+    
+    const backendToken = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
+    
+    res.json({ success: true, data: { token: backendToken, user } });
+  } catch(err) {
+    console.error('Auth error:', err);
+    res.status(401).json({ success: false, error: 'Invalid Google token' });
+  }
+});
+
+app.post('/api/auth/signup', async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!name || !email || !password) return res.status(400).json({ success: false, error: 'All fields are required' });
+
+    const existingUser = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    if (existingUser) return res.status(400).json({ success: false, error: 'Email is already registered' });
+
+    const user_id = crypto.randomUUID();
+    const password_hash = await bcrypt.hash(password, 10);
+    
+    db.prepare(`
+      INSERT INTO users (id, email, name, password_hash, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).run(user_id, email, name, password_hash, new Date().toISOString());
+
+    const user = { id: user_id, email, name, picture: null };
+    const backendToken = jwt.sign({ id: user.id, email: user.email, name: user.name }, JWT_SECRET, { expiresIn: '7d' });
+    
+    res.json({ success: true, data: { token: backendToken, user } });
+  } catch(err) {
+    console.error('Signup error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) return res.status(400).json({ success: false, error: 'Email and password are required' });
+
+    const user = db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+    if (!user) return res.status(401).json({ success: false, error: 'Invalid email or password' });
+
+    if (!user.password_hash) {
+      return res.status(401).json({ success: false, error: 'This account was created using Google Sign-In. Please sign in with Google.' });
+    }
+
+    const match = await bcrypt.compare(password, user.password_hash);
+    if (!match) return res.status(401).json({ success: false, error: 'Invalid email or password' });
+
+    const publicUser = { id: user.id, email: user.email, name: user.name, picture: user.picture };
+    const backendToken = jwt.sign({ id: publicUser.id, email: publicUser.email, name: publicUser.name }, JWT_SECRET, { expiresIn: '7d' });
+    
+    res.json({ success: true, data: { token: backendToken, user: publicUser } });
+  } catch(err) {
+    console.error('Login error:', err);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  }
+});
+
+app.post('/api/hackathon/upload', authenticateToken, upload.single('csv_file'), async (req, res) => {
   try {
     const data = req.body;
     const parsed = submitSchema.safeParse(data);
@@ -31,8 +132,8 @@ app.post('/api/hackathon/upload', upload.single('csv_file'), async (req, res) =>
     const ts = new Date().toISOString();
 
     db.prepare(`
-      INSERT INTO hackathons (id, name, description, created_at) VALUES (?, ?, ?, ?)
-    `).run(hackathon_id, parsed.data.hackathon_name, parsed.data.description || null, ts);
+      INSERT INTO hackathons (id, judge_id, name, description, created_at) VALUES (?, ?, ?, ?, ?)
+    `).run(hackathon_id, req.user.id, parsed.data.hackathon_name, parsed.data.description || null, ts);
 
     const rows = [];
     fs.createReadStream(req.file.path)
@@ -110,6 +211,15 @@ app.get('/api/hackathon/progress/:id', (req, res) => {
   const job = activeJobs[req.params.id];
   if (!job) return res.json({ success: true, data: { status: 'unknown or finished', completed: 0, total: 0 } });
   res.json({ success: true, data: job });
+});
+
+app.get('/api/organizer/hackathons', authenticateToken, (req, res) => {
+  try {
+    const rows = db.prepare('SELECT * FROM hackathons WHERE judge_id = ? ORDER BY created_at DESC').all(req.user.id);
+    res.json({ success: true, data: rows });
+  } catch(err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 app.get('/api/hackathons', (req, res) => {

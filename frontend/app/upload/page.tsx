@@ -29,6 +29,13 @@ export default function UploadPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  React.useEffect(() => {
+    const token = localStorage.getItem('orchestra_token');
+    if (!token) {
+      window.location.href = '/login';
+    }
+  }, []);
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
@@ -64,6 +71,12 @@ export default function UploadPage() {
     e.preventDefault();
     if (!file || !hackathonName.trim()) return;
 
+    const token = localStorage.getItem('orchestra_token');
+    if (!token) {
+      setError('You must be logged in as a judge to upload submissions.');
+      return;
+    }
+
     setUploading(true);
     setError(null);
     setResult(null);
@@ -77,6 +90,9 @@ export default function UploadPage() {
     try {
       const res = await fetch('http://localhost:8000/api/hackathon/upload', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
         body: formData,
       });
       const data = await res.json();

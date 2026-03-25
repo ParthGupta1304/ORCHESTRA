@@ -29,6 +29,12 @@ export default function HackathonDetailPage() {
   const [hackathonId, setHackathonId] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem('orchestra_token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
     const pathParts = window.location.pathname.split('/');
     const id = pathParts[pathParts.length - 1];
     setHackathonId(id);

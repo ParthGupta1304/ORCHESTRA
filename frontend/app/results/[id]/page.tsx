@@ -70,6 +70,12 @@ export default function ResultDetailsPage() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('orchestra_token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
     const pathParts = window.location.pathname.split('/');
     const resultId = pathParts[pathParts.length - 1];
     setSubmissionId(resultId);

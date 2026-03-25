@@ -19,6 +19,8 @@ export const metadata: Metadata = {
   description: "Intelligent multi-agent evaluation pipeline for hackathon submissions. Score, rank, and provide feedback automatically.",
 };
 
+import { Providers } from "@/components/providers";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -32,8 +34,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-black text-white">
         <AetherBackground />
         <div className="relative z-10 min-h-full flex flex-col">
-          <Navbar />
-          {children}
+          <Providers>
+            <Navbar />
+            {children}
+          </Providers>
         </div>
       </body>
     </html>

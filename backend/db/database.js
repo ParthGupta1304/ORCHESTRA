@@ -7,11 +7,21 @@ const db = new Database(dbPath);
 console.log('Initializing better-sqlite3 database at:', dbPath);
 
 db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    email TEXT UNIQUE,
+    name TEXT,
+    picture TEXT,
+    created_at TEXT
+  );
+
   CREATE TABLE IF NOT EXISTS hackathons (
     id TEXT PRIMARY KEY,
+    judge_id TEXT,
     name TEXT,
     description TEXT,
-    created_at TEXT
+    created_at TEXT,
+    FOREIGN KEY(judge_id) REFERENCES users(id)
   );
 
   CREATE TABLE IF NOT EXISTS submissions (
@@ -43,9 +53,21 @@ db.exec(`
   );
 `);
 
-// Safely attempt to add hackathon_id column if table already existed without it from the previous prototype version
+// Safely attempt to add columns if table already existed without them from the previous prototype version
 try {
   db.exec('ALTER TABLE submissions ADD COLUMN hackathon_id TEXT');
+} catch (e) {
+  // Ignore if column already exists
+}
+
+try {
+  db.exec('ALTER TABLE hackathons ADD COLUMN judge_id TEXT');
+} catch (e) {
+  // Ignore if column already exists
+}
+
+try {
+  db.exec('ALTER TABLE users ADD COLUMN password_hash TEXT');
 } catch (e) {
   // Ignore if column already exists
 }

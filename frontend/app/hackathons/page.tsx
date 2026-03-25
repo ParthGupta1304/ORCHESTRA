@@ -30,6 +30,12 @@ export default function HackathonsPage() {
   const [activeTab, setActiveTab] = useState<'hackathons' | 'leaderboard'>('hackathons');
 
   useEffect(() => {
+    const token = localStorage.getItem('orchestra_token');
+    if (!token) {
+      window.location.href = '/login';
+      return;
+    }
+
     Promise.all([
       fetch('http://localhost:8000/api/hackathons').then(r => r.json()),
       fetch('http://localhost:8000/api/leaderboard').then(r => r.json()),

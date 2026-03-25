@@ -3,18 +3,38 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Music, LayoutDashboard, Trophy, Upload, LogIn, Menu, X } from 'lucide-react';
+import { Music, LayoutDashboard, Trophy, Upload, Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string; picture?: string } | null>(null);
 
-  const links = [
-    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { href: '/hackathons', label: 'Hackathons', icon: Trophy },
-    { href: '/upload', label: 'Upload', icon: Upload },
+  React.useEffect(() => {
+    const userData = localStorage.getItem('orchestra_user');
+    if (userData) {
+      try {
+        setUser(JSON.parse(userData));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('orchestra_token');
+    localStorage.removeItem('orchestra_user');
+    setUser(null);
+    window.location.href = '/login';
+  };
+
+  const allLinks = [
+    { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, requiresAuth: true },
+    { href: '/hackathons', label: 'Hackathons', icon: Trophy, requiresAuth: true },
+    { href: '/upload', label: 'Upload', icon: Upload, requiresAuth: true },
   ];
 
+  const visibleLinks = allLinks.filter(link => !link.requiresAuth || user);
   const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/');
 
   if (pathname === '/') return null;
@@ -32,8 +52,8 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-1">
-            {links.map(({ href, label, icon: Icon }) => (
+          <div className="hidden md:flex flex-1 justify-center items-center gap-1">
+            {visibleLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
@@ -50,28 +70,53 @@ const Navbar = () => {
           </div>
 
           {/* Auth */}
-          <div className="hidden md:flex items-center gap-2">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="px-4 py-2 text-sm font-semibold bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors shadow-lg shadow-purple-500/10"
-            >
-              Get Started
-            </Link>
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  {user.picture ? (
+                    <img src={user.picture} alt="Profile" className="w-7 h-7 rounded-full border border-white/20" />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs font-bold border border-purple-500/20">
+                      {user.name.charAt(0)}
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-gray-200">{user.name}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-white bg-white/5 hover:bg-red-500/20 hover:text-red-400 rounded-lg transition-colors border border-white/10"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white transition-colors"
+              >
+                Judge Login
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu toggle */}
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-gray-400 hover:text-white transition-colors"
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          <div className="md:hidden flex items-center gap-3">
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-red-400 border border-white/10 rounded-lg"
+              >
+                Sign Out
+              </button>
+            )}
+            <button
+              onClick={() => setMobileOpen(!mobileOpen)}
+              className="p-2 text-gray-400 hover:text-white transition-colors"
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -79,7 +124,7 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="md:hidden border-t border-white/25 bg-black/90 backdrop-blur-xl">
           <div className="px-4 py-4 space-y-1">
-            {links.map(({ href, label, icon: Icon }) => (
+            {visibleLinks.map(({ href, label, icon: Icon }) => (
               <Link
                 key={href}
                 href={href}
@@ -94,14 +139,13 @@ const Navbar = () => {
                 {label}
               </Link>
             ))}
-            <div className="border-t border-white/25 pt-3 mt-3 space-y-1">
-              <Link href="/login" onClick={() => setMobileOpen(false)} className="block px-4 py-3 text-sm text-gray-400 hover:text-white">
-                Sign In
-              </Link>
-              <Link href="/signup" onClick={() => setMobileOpen(false)} className="block px-4 py-3 text-sm font-semibold text-purple-400">
-                Get Started
-              </Link>
-            </div>
+            {!user && (
+              <div className="border-t border-white/25 pt-3 mt-3 space-y-1">
+                <Link href="/login" onClick={() => setMobileOpen(false)} className="block px-4 py-3 text-sm text-gray-400 hover:text-white">
+                  Judge Login
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

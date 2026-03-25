@@ -2,17 +2,44 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, Mail, User, Music } from 'lucide-react';
+import { Lock, Mail, User, Music, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function SignupPage() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Sign Up pressed (Frontend Only)");
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch('http://localhost:8000/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json();
+
+      if (data.success && data.data.token) {
+        localStorage.setItem('orchestra_token', data.data.token);
+        localStorage.setItem('orchestra_user', JSON.stringify(data.data.user));
+        router.push('/dashboard');
+      } else {
+        setError(data.error || 'Signup failed. Please try again.');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -30,6 +57,12 @@ export default function SignupPage() {
           <h1 className="text-3xl font-bold gradient-text">Create Account</h1>
           <p className="text-gray-500 mt-2">Join the Orchestra platform</p>
         </div>
+
+        {error && (
+          <div className="w-full p-3 mb-6 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
@@ -69,6 +102,7 @@ export default function SignupPage() {
               <input
                 type="password"
                 required
+                minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 bg-black/20 border border-white/40 rounded-xl text-white placeholder-gray-600 transition-all"
@@ -79,9 +113,10 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/10 transition-colors flex justify-center items-center gap-2"
+            disabled={loading}
+            className="w-full py-3 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/10 transition-colors flex justify-center items-center gap-2"
           >
-            Create Account
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Create Account"}
           </button>
         </form>
 
