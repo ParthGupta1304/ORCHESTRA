@@ -133,7 +133,7 @@ export default function UploadPage() {
                     required
                     value={hackathonName}
                     onChange={(e) => setHackathonName(e.target.value)}
-                    className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-600 transition-all"
+                    className="w-full px-4 py-3 bg-black/20 border border-white/40 rounded-xl text-white placeholder-gray-600 transition-all"
                     placeholder="e.g. HackMIT 2025"
                   />
                 </div>
@@ -143,7 +143,7 @@ export default function UploadPage() {
                   <textarea
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-4 py-3 bg-black/50 border border-white/10 rounded-xl text-white placeholder-gray-600 transition-all resize-none"
+                    className="w-full px-4 py-3 bg-black/20 border border-white/40 rounded-xl text-white placeholder-gray-600 transition-all resize-none"
                     rows={3}
                     placeholder="Brief description of the hackathon..."
                   />
@@ -155,7 +155,7 @@ export default function UploadPage() {
                 className={`glass-card p-8 text-center cursor-pointer transition-all duration-300 ${
                   file
                     ? 'border-purple-500/30 bg-purple-500/5'
-                    : 'hover:border-white/20 hover:bg-white/[0.03]'
+                    : 'hover:border-white/40 hover:bg-white/[0.18]'
                 }`}
                 onClick={() => fileInputRef.current?.click()}
                 onDragOver={(e) => e.preventDefault()}
@@ -182,7 +182,7 @@ export default function UploadPage() {
                         e.stopPropagation();
                         setFile(null);
                       }}
-                      className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                      className="p-2 hover:bg-white/25 rounded-lg transition-colors"
                     >
                       <X className="w-4 h-4 text-gray-400" />
                     </button>
@@ -203,7 +203,7 @@ export default function UploadPage() {
                 <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Expected CSV Columns</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                   {['Team Name', 'GitHub URL', 'Pitch Deck URL', 'Prototype URL'].map(col => (
-                    <div key={col} className="px-3 py-2 bg-white/[0.03] border border-white/5 rounded-lg text-xs text-gray-400 font-mono">
+                    <div key={col} className="px-3 py-2 bg-white/[0.18] border border-white/25 rounded-lg text-xs text-gray-400 font-mono">
                       {col}
                     </div>
                   ))}
@@ -270,7 +270,7 @@ export default function UploadPage() {
                       <span>{progress.completed} / {progress.total} evaluated</span>
                       <span>{progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0}%</span>
                     </div>
-                    <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-3 w-full bg-white/25 rounded-full overflow-hidden">
                       <motion.div
                         className="h-full rounded-full bg-gradient-to-r from-purple-500 to-violet-500"
                         initial={{ width: 0 }}
@@ -321,7 +321,7 @@ export default function UploadPage() {
                     setDescription('');
                     if (intervalRef.current) clearInterval(intervalRef.current);
                   }}
-                  className="px-6 py-3 border border-white/10 text-white rounded-xl hover:bg-white/5 transition-colors font-medium"
+                  className="px-6 py-3 border border-white/40 text-white rounded-xl hover:bg-white/25 transition-colors font-medium"
                 >
                   New Upload
                 </button>

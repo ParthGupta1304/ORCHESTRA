@@ -61,7 +61,7 @@ export default function HackathonsPage() {
     if (rank === 1) return 'bg-yellow-500/10 border-yellow-500/20';
     if (rank === 2) return 'bg-gray-400/10 border-gray-400/20';
     if (rank === 3) return 'bg-amber-600/10 border-amber-600/20';
-    return 'bg-white/[0.02] border-white/5';
+    return 'bg-white/[0.15] border-white/25';
   };
 
   return (
@@ -87,7 +87,7 @@ export default function HackathonsPage() {
           transition={{ delay: 0.1 }}
           className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6"
         >
-          <div className="flex bg-white/5 rounded-xl p-1 border border-white/5">
+          <div className="flex bg-white/25 rounded-xl p-1 border border-white/25">
             <button
               onClick={() => setActiveTab('hackathons')}
               className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
@@ -123,7 +123,7 @@ export default function HackathonsPage() {
               placeholder="Search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full sm:w-64 pl-10 pr-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 transition-all"
+              className="w-full sm:w-64 pl-10 pr-4 py-2.5 bg-white/25 border border-white/40 rounded-xl text-sm text-white placeholder-gray-600 transition-all"
             />
           </div>
         </motion.div>
@@ -184,7 +184,7 @@ export default function HackathonsPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-white/10 bg-white/[0.03]">
+                    <tr className="border-b border-white/40 bg-white/[0.18]">
                       <th className="p-4 pl-6 font-semibold text-gray-400 text-sm">Rank</th>
                       <th className="p-4 font-semibold text-gray-400 text-sm">Team</th>
                       <th className="p-4 font-semibold text-gray-400 text-sm">Confidence</th>
@@ -199,7 +199,7 @@ export default function HackathonsPage() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.03 }}
-                        className={`border-b border-white/5 hover:bg-white/[0.03] transition-colors group ${getRankBg(entry.rank)}`}
+                        className={`border-b border-white/25 hover:bg-white/[0.18] transition-colors group ${getRankBg(entry.rank)}`}
                       >
                         <td className={`p-4 pl-6 font-bold text-lg ${getRankStyle(entry.rank)}`}>
                           {entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : `#${entry.rank}`}
@@ -215,7 +215,7 @@ export default function HackathonsPage() {
                         </td>
                         <td className="p-4">
                           <div className="flex items-center gap-3">
-                            <div className="h-2 w-28 bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-2 w-28 bg-white/25 rounded-full overflow-hidden">
                               <div
                                 className="h-full bg-gradient-to-r from-purple-500 to-violet-500 rounded-full"
                                 style={{ width: `${Math.min(100, entry.total_score)}%` }}

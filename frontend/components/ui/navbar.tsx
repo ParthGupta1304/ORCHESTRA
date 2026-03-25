@@ -20,7 +20,7 @@ const Navbar = () => {
   if (pathname === '/') return null;
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-white/5 bg-black/50 backdrop-blur-xl">
+    <nav className="sticky top-0 z-50 w-full border-b border-white/25 bg-black/20 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -40,7 +40,7 @@ const Navbar = () => {
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(href)
                     ? 'bg-purple-500/15 text-purple-300 shadow-inner'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    : 'text-gray-400 hover:text-white hover:bg-white/25'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -77,7 +77,7 @@ const Navbar = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-white/5 bg-black/90 backdrop-blur-xl">
+        <div className="md:hidden border-t border-white/25 bg-black/90 backdrop-blur-xl">
           <div className="px-4 py-4 space-y-1">
             {links.map(({ href, label, icon: Icon }) => (
               <Link
@@ -87,14 +87,14 @@ const Navbar = () => {
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                   isActive(href)
                     ? 'bg-purple-500/15 text-purple-300'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                    : 'text-gray-400 hover:text-white hover:bg-white/25'
                 }`}
               >
                 <Icon className="w-4 h-4" />
                 {label}
               </Link>
             ))}
-            <div className="border-t border-white/5 pt-3 mt-3 space-y-1">
+            <div className="border-t border-white/25 pt-3 mt-3 space-y-1">
               <Link href="/login" onClick={() => setMobileOpen(false)} className="block px-4 py-3 text-sm text-gray-400 hover:text-white">
                 Sign In
               </Link>

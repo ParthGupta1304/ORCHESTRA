@@ -101,7 +101,7 @@ const AetherFlowHero = () => {
                         </button>
                     </Link>
                     <Link href="/upload">
-                        <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-semibold rounded-xl shadow-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 flex items-center gap-2">
+                        <button className="px-8 py-4 bg-transparent border border-white/40 text-white font-semibold rounded-xl shadow-lg hover:bg-white/25 hover:border-white/40 transition-all duration-300 flex items-center gap-2">
                             Upload Submissions
                         </button>
                     </Link>
@@ -116,11 +116,11 @@ const AetherFlowHero = () => {
                             variants={fadeUpVariants}
                             initial="hidden"
                             animate="visible"
-                            className="glass-card glass-card-hover p-6 text-left"
+                            className="glass-card glass-card-hover p-6 text-left text-white"
                         >
                             <feat.icon className="w-8 h-8 text-purple-400 mb-3" />
-                            <h3 className="text-white font-semibold mb-1">{feat.title}</h3>
-                            <p className="text-gray-500 text-sm leading-relaxed">{feat.desc}</p>
+                            <h2 className="text-white font-semibold mb-1">{feat.title}</h2>
+                            <p className="text-lightgray-500 text-sm leading-relaxed">{feat.desc}</p>
                         </motion.div>
                     ))}
                 </div>

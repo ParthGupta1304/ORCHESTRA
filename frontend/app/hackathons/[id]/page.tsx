@@ -123,7 +123,7 @@ export default function HackathonDetailPage() {
                           return (
                             <div key={dim} className="flex items-center gap-2">
                               <span className="text-xs text-gray-500 w-20 text-left truncate">{info.label}</span>
-                              <div className="flex-1 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                              <div className="flex-1 h-1.5 bg-white/25 rounded-full overflow-hidden">
                                 <div
                                   className={`h-full rounded-full bg-gradient-to-r ${info.color}`}
                                   style={{ width: `${(score / info.max) * 100}%` }}
@@ -150,7 +150,7 @@ export default function HackathonDetailPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="border-b border-white/10 bg-white/[0.03]">
+                    <tr className="border-b border-white/40 bg-white/[0.18]">
                       <th className="p-4 pl-6 font-semibold text-gray-400 text-sm">Rank</th>
                       <th className="p-4 font-semibold text-gray-400 text-sm">Team</th>
                       <th className="p-4 font-semibold text-gray-400 text-sm">Confidence</th>
@@ -168,7 +168,7 @@ export default function HackathonDetailPage() {
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.25 + idx * 0.03 }}
-                        className="border-b border-white/5 hover:bg-white/[0.03] transition-colors group"
+                        className="border-b border-white/25 hover:bg-white/[0.18] transition-colors group"
                       >
                         <td className={`p-4 pl-6 font-bold ${getRankStyle(entry.rank)}`}>
                           {entry.rank <= 3 ? ['🥇', '🥈', '🥉'][entry.rank - 1] : `#${entry.rank}`}

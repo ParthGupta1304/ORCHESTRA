@@ -140,7 +140,7 @@ export default function DashboardPage() {
             {loading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map(i => (
-                  <div key={i} className="h-20 bg-white/5 rounded-xl animate-pulse" />
+                  <div key={i} className="h-20 bg-white/25 rounded-xl animate-pulse" />
                 ))}
               </div>
             ) : hackathons.length === 0 ? (
@@ -161,7 +161,7 @@ export default function DashboardPage() {
                     transition={{ delay: 0.5 + idx * 0.05 }}
                   >
                     <Link href={`/hackathons/${hack.id}`}>
-                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:border-purple-500/20 hover:bg-white/[0.04] transition-all duration-200 group cursor-pointer">
+                      <div className="flex items-center justify-between p-4 rounded-xl bg-white/[0.15] border border-white/25 hover:border-purple-500/20 hover:bg-white/[0.22] transition-all duration-200 group cursor-pointer">
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-violet-500/20 flex items-center justify-center border border-purple-500/10">
                             <Trophy className="w-4 h-4 text-purple-400" />
@@ -206,9 +206,9 @@ export default function DashboardPage() {
                 </div>
               </Link>
               <Link href="/hackathons">
-                <div className="p-4 rounded-xl bg-white/[0.02] border border-white/5 hover:bg-white/[0.04] hover:border-purple-500/20 transition-all cursor-pointer group mt-3">
+                <div className="p-4 rounded-xl bg-white/[0.15] border border-white/25 hover:bg-white/[0.22] hover:border-purple-500/20 transition-all cursor-pointer group mt-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-lg bg-white/25 flex items-center justify-center">
                       <BarChart3 className="w-5 h-5 text-gray-400" />
                     </div>
                     <div>
@@ -221,7 +221,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Pipeline Info */}
-            <div className="mt-8 pt-6 border-t border-white/5">
+            <div className="mt-8 pt-6 border-t border-white/25">
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">Evaluation Pipeline</h3>
               <div className="space-y-3">
                 {[

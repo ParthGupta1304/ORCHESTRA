@@ -244,14 +244,14 @@ export default function ResultDetailsPage() {
                             setOverrideOpen(overrideOpen === dim ? null : dim);
                             setOverrideScore(String(score));
                           }}
-                          className="p-1 hover:bg-white/10 rounded text-gray-600 hover:text-purple-400 transition-colors"
+                          className="p-1 hover:bg-white/25 rounded text-gray-600 hover:text-purple-400 transition-colors"
                           title="Override score"
                         >
                           <Edit3 className="w-3 h-3" />
                         </button>
                       </div>
                     </div>
-                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-white/25 rounded-full overflow-hidden">
                       <motion.div
                         className={`h-full ${cfg.color} rounded-full`}
                         initial={{ width: 0 }}
@@ -269,13 +269,13 @@ export default function ResultDetailsPage() {
                           exit={{ opacity: 0, height: 0 }}
                           className="overflow-hidden"
                         >
-                          <div className="p-4 bg-white/[0.03] border border-white/5 rounded-xl space-y-3 mt-2">
+                          <div className="p-4 bg-white/[0.18] border border-white/25 rounded-xl space-y-3 mt-2">
                             <div className="flex gap-2">
                               <input
                                 type="number"
                                 value={overrideScore}
                                 onChange={(e) => setOverrideScore(e.target.value)}
-                                className="w-20 px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-sm text-white"
+                                className="w-20 px-3 py-2 bg-black/20 border border-white/40 rounded-lg text-sm text-white"
                                 min={0}
                                 max={cfg.max}
                                 step={0.5}
@@ -285,7 +285,7 @@ export default function ResultDetailsPage() {
                                 type="text"
                                 value={overrideJudge}
                                 onChange={(e) => setOverrideJudge(e.target.value)}
-                                className="flex-1 px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-sm text-white placeholder-gray-600"
+                                className="flex-1 px-3 py-2 bg-black/20 border border-white/40 rounded-lg text-sm text-white placeholder-gray-600"
                                 placeholder="Your name"
                               />
                             </div>
@@ -293,7 +293,7 @@ export default function ResultDetailsPage() {
                               type="text"
                               value={overrideReason}
                               onChange={(e) => setOverrideReason(e.target.value)}
-                              className="w-full px-3 py-2 bg-black/60 border border-white/10 rounded-lg text-sm text-white placeholder-gray-600"
+                              className="w-full px-3 py-2 bg-black/20 border border-white/40 rounded-lg text-sm text-white placeholder-gray-600"
                               placeholder="Reason for override..."
                             />
                             <div className="flex gap-2">
@@ -307,7 +307,7 @@ export default function ResultDetailsPage() {
                               </button>
                               <button
                                 onClick={() => setOverrideOpen(null)}
-                                className="px-4 py-2 border border-white/10 text-gray-400 rounded-lg text-sm hover:bg-white/5 transition-colors"
+                                className="px-4 py-2 border border-white/40 text-gray-400 rounded-lg text-sm hover:bg-white/25 transition-colors"
                               >
                                 <X className="w-3 h-3" />
                               </button>
@@ -367,7 +367,7 @@ export default function ResultDetailsPage() {
                   .map((output: any) => {
                     const cfg = dimConfig[output.dimension] || { label: output.dimension, color: 'bg-gray-500', bgColor: 'bg-gray-500/10' };
                     return (
-                      <div key={output.dimension} className="p-5 bg-white/[0.02] border border-white/5 rounded-xl">
+                      <div key={output.dimension} className="p-5 bg-white/[0.15] border border-white/25 rounded-xl">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full ${cfg.color}`} />
