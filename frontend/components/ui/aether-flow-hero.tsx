@@ -2,218 +2,128 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight, Music, Sparkles, Shield, Zap, BarChart3 } from 'lucide-react';
+import Link from 'next/link';
 
-// A utility function for class names
-const cn = (...classes: (string | boolean | undefined)[]) => classes.filter(Boolean).join(' ');
-
-// The main hero component
 const AetherFlowHero = () => {
-    const canvasRef = React.useRef<HTMLCanvasElement>(null);
-
-    React.useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        let animationFrameId: number;
-        let particles: Particle[] = [];
-        const mouse = { x: null as number | null, y: null as number | null, radius: 200 };
-
-        class Particle {
-            x: number;
-            y: number;
-            directionX: number;
-            directionY: number;
-            size: number;
-            color: string;
-
-            constructor(x: number, y: number, directionX: number, directionY: number, size: number, color: string) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
-            }
-
-            draw() {
-                ctx!.beginPath();
-                ctx!.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx!.fillStyle = this.color;
-                ctx!.fill();
-            }
-
-            update() {
-                if (this.x > canvas!.width || this.x < 0) {
-                    this.directionX = -this.directionX;
-                }
-                if (this.y > canvas!.height || this.y < 0) {
-                    this.directionY = -this.directionY;
-                }
-
-                // Mouse collision detection
-                if (mouse.x !== null && mouse.y !== null) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius + this.size) {
-                        const forceDirectionX = dx / distance;
-                        const forceDirectionY = dy / distance;
-                        const force = (mouse.radius - distance) / mouse.radius;
-                        this.x -= forceDirectionX * force * 5;
-                        this.y -= forceDirectionY * force * 5;
-                    }
-                }
-
-                this.x += this.directionX;
-                this.y += this.directionY;
-                this.draw();
-            }
-        }
-
-        function init() {
-            particles = [];
-            let numberOfParticles = (canvas!.height * canvas!.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 0.4) - 0.2;
-                let directionY = (Math.random() * 0.4) - 0.2;
-                let color = 'rgba(191, 128, 255, 0.8)';
-                particles.push(new Particle(x, y, directionX, directionY, size, color));
-            }
-        }
-
-        const resizeCanvas = () => {
-            canvas!.width = window.innerWidth;
-            canvas!.height = window.innerHeight;
-            init(); 
-        };
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        const connect = () => {
-            let opacityValue = 1;
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a; b < particles.length; b++) {
-                    let distance = ((particles[a].x - particles[b].x) * (particles[a].x - particles[b].x))
-                        + ((particles[a].y - particles[b].y) * (particles[a].y - particles[b].y));
-                    
-                    if (distance < (canvas!.width / 7) * (canvas!.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        
-                        let dx_mouse_a = particles[a].x - (mouse.x ?? 0);
-                        let dy_mouse_a = particles[a].y - (mouse.y ?? 0);
-                        let distance_mouse_a = Math.sqrt(dx_mouse_a*dx_mouse_a + dy_mouse_a*dy_mouse_a);
-
-                        if (mouse.x && distance_mouse_a < mouse.radius) {
-                             ctx!.strokeStyle = `rgba(255, 255, 255, ${opacityValue})`;
-                        } else {
-                             ctx!.strokeStyle = `rgba(200, 150, 255, ${opacityValue})`;
-                        }
-                        
-                        ctx!.lineWidth = 1;
-                        ctx!.beginPath();
-                        ctx!.moveTo(particles[a].x, particles[a].y);
-                        ctx!.lineTo(particles[b].x, particles[b].y);
-                        ctx!.stroke();
-                    }
-                }
-            }
-        };
-
-        const animate = () => {
-            animationFrameId = requestAnimationFrame(animate);
-            ctx!.fillStyle = 'black';
-            ctx!.fillRect(0, 0, innerWidth, innerHeight);
-
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-            }
-            connect();
-        };
-        
-        const handleMouseMove = (event: MouseEvent) => {
-            mouse.x = event.clientX;
-            mouse.y = event.clientY;
-        };
-        
-        const handleMouseOut = () => {
-            mouse.x = null;
-            mouse.y = null;
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseout', handleMouseOut);
-
-        init();
-        animate();
-
-        return () => {
-            window.removeEventListener('resize', resizeCanvas);
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseout', handleMouseOut);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, []);
-
     const fadeUpVariants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 30 },
         visible: (i: number) => ({
             opacity: 1,
             y: 0,
             transition: {
-                delay: i * 0.2 + 0.5,
-                duration: 0.8,
-                ease: "easeInOut",
+                delay: i * 0.15 + 0.3,
+                duration: 0.7,
+                ease: [0.25, 0.4, 0.25, 1] as const,
             },
         }),
     };
 
+    const features = [
+        {
+            icon: Sparkles,
+            title: "5 Specialist Judges",
+            desc: "Innovation, Technical, Business, Presentation & Clarity",
+        },
+        {
+            icon: Shield,
+            title: "Bias Auditor",
+            desc: "Automated bias detection & score validation",
+        },
+        {
+            icon: BarChart3,
+            title: "Real-time Leaderboard",
+            desc: "Live rankings with dimension breakdowns",
+        },
+    ];
+
     return (
-        <div className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-            {/* The canvas is the primary background */}
-            <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full"></canvas>
-            
+        <div className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
             {/* Overlay HTML Content */}
-            <div className="relative z-10 text-center p-6">
-                
+            <div className="relative z-10 text-center p-6 max-w-5xl mx-auto">
+                <motion.div
+                    custom={0}
+                    variants={fadeUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-8 backdrop-blur-sm"
+                >
+                    <Zap className="h-4 w-4 text-purple-400" />
+                    <span className="text-sm font-medium text-gray-300">
+                        AI-Powered Hackathon Evaluation
+                    </span>
+                </motion.div>
+
+                <motion.div
+                    custom={0.5}
+                    variants={fadeUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="flex items-center justify-center gap-4 mb-6"
+                >
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center shadow-2xl shadow-purple-500/20">
+                        <Music className="w-7 h-7 text-white" />
+                    </div>
+                </motion.div>
 
                 <motion.h1
                     custom={1}
                     variants={fadeUpVariants}
                     initial="hidden"
                     animate="visible"
-                    className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-400"
+                    className="text-5xl md:text-8xl font-bold tracking-tighter mb-6 gradient-text"
                 >
-                    ORCHESTRA
+                    Orchestra
                 </motion.h1>
 
                 <motion.p
+                    custom={1.5}
+                    variants={fadeUpVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 mb-12 leading-relaxed"
+                >
+                    A multi-agent AI pipeline that evaluates hackathon submissions across 5 dimensions, 
+                    detects scoring bias, and generates comprehensive feedback — all automatically.
+                </motion.p>
+
+                <motion.div
                     custom={2}
                     variants={fadeUpVariants}
                     initial="hidden"
                     animate="visible"
-                    className="max-w-2xl mx-auto text-lg text-gray-400 mb-10"
+                    className="flex gap-4 justify-center mb-20"
                 >
-                    An intelligent, adaptive framework for creating fluid digital experiences that feel alive and respond to user interaction in real-time.
-                </motion.p>
-
-                <motion.div
-                    custom={3}
-                    variants={fadeUpVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <button className="px-8 py-4 bg-white text-black font-semibold rounded-lg shadow-lg hover:bg-gray-200 transition-colors duration-300 flex items-center gap-2 mx-auto">
-                        Get Started
-                        <ArrowRight className="h-5 w-5" />
-                    </button>
+                    <Link href="/dashboard">
+                        <button className="px-8 py-4 bg-white text-black font-semibold rounded-xl shadow-lg hover:bg-gray-100 transition-all duration-300 flex items-center gap-2 hover:shadow-xl hover:scale-[1.02]">
+                            Open Dashboard
+                            <ArrowRight className="h-5 w-5" />
+                        </button>
+                    </Link>
+                    <Link href="/upload">
+                        <button className="px-8 py-4 bg-transparent border border-white/20 text-white font-semibold rounded-xl shadow-lg hover:bg-white/5 hover:border-white/40 transition-all duration-300 flex items-center gap-2">
+                            Upload Submissions
+                        </button>
+                    </Link>
                 </motion.div>
+
+                {/* Feature Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+                    {features.map((feat, idx) => (
+                        <motion.div
+                            key={feat.title}
+                            custom={2.5 + idx * 0.15}
+                            variants={fadeUpVariants}
+                            initial="hidden"
+                            animate="visible"
+                            className="glass-card glass-card-hover p-6 text-left"
+                        >
+                            <feat.icon className="w-8 h-8 text-purple-400 mb-3" />
+                            <h3 className="text-white font-semibold mb-1">{feat.title}</h3>
+                            <p className="text-gray-500 text-sm leading-relaxed">{feat.desc}</p>
+                        </motion.div>
+                    ))}
+                </div>
             </div>
         </div>
     );
