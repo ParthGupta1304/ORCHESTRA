@@ -155,10 +155,13 @@ const AetherBackground = () => {
     }, []);
 
     return (
-        <canvas 
-            ref={canvasRef} 
-            className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none"
-        ></canvas>
+        <div className="fixed inset-0 -z-10 pointer-events-none">
+            <canvas
+                ref={canvasRef}
+                className="absolute inset-0 w-full h-full"
+            ></canvas>
+            <div className="absolute inset-0 bg-black/50"></div>
+        </div>
     );
 };
 
