@@ -49,6 +49,12 @@ See exactly what each AI judge found â€” strengths, improvements, and evidence â
 - Global and per-hackathon leaderboard
 - Manual score override system with judge name and reason
 
+
+
+
+
+- **Agentic LLM Router (Triage Mode)**: For large, multi-track hackathons, a lightweight "Router Agent" will rapidly scan incoming submissions and dynamically route evaluations to domain-specific personas or localized models (e.g., a "Web3 Judge", a "Healthcare Compliance Judge", a "Hardware Edge-AI Judge"). This ensures highly technical and jargon-heavy submissions receive mathematically and scientifically rigorous evaluations.
+
 ---
 
 ## Scoring System
