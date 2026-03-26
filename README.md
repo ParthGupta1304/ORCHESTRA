@@ -29,7 +29,7 @@ Rankings for every team, with per-dimension breakdowns and confidence tiers at a
 ### Team Result Page
 Full score breakdown for a single team, with a downloadable feedback report and editable dimension scores.
 
-![Team result page showing dimension scores and AI feedback report](./docs/screenshots/docs/screenshots/Ai-feedback-report.jpeg)
+![Team result page showing dimension scores and AI feedback report](./docs/screenshots/teamresultpage.jpeg)
 
 ### Agent Audit View
 See exactly what each AI judge found — strengths, improvements, and evidence — before the chief judge calculated the final score.
@@ -55,7 +55,7 @@ See exactly what each AI judge found — strengths, improvements, and evidence �
 
 Every submission is scored out of **100 points** across five categories. The five judge agents run in parallel, then the bias auditor and chief judge run on their combined outputs.
 
-<<<<<<< HEAD
+
 | Category     | Max | What it looks at |
 |:-------------|:---:|:-----------------|
 | Innovation   | 25  | Originality of the idea, creative problem-solving |
@@ -71,7 +71,7 @@ Every submission is scored out of **100 points** across five categories. The fiv
 | Business     | 15        | Market opportunity, feasibility, and monetization     |
 | Presentation | 15        | Clarity of the pitch deck and storytelling            |
 | Clarity      | 20        | How clearly the problem and solution are communicated |
->>>>>>> d1db7eb (readme and minor change)
+
 
 After scoring, the chief judge assigns one of three confidence tiers:
 
@@ -173,7 +173,7 @@ ORBIX/
 
 Column names are matched case-insensitively, so variations like `"Team Name"` or `"team name"` both work.
 
-<<<<<<< HEAD
+
 | Column         | Accepted names                                              | Required |
 |:---------------|:------------------------------------------------------------|:--------:|
 | Team name      | team name, team, project name, project                      | ✅ |
@@ -191,7 +191,7 @@ Column names are matched case-insensitively, so variations like `"Team Name"` or
 | Prototype URL  | prototype url, prototype, demo link, demo          | No       |
 
 \*At least one of GitHub URL or Pitch deck URL must be present for a row to be evaluated.
->>>>>>> d1db7eb (readme and minor change)
+
 
 ---
 
