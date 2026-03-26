@@ -24,17 +24,17 @@ Orchestra replaces the exhausting process of manually reviewing dozens of GitHub
 ### Hackathon Leaderboard
 Rankings for every team, with per-dimension breakdowns and confidence tiers at a glance.
 
-![Leaderboard view showing ranked teams with score breakdowns](./docs/screenshots/leaderboard.png)
+![Leaderboard view showing ranked teams with score breakdowns](./docs/screenshots/leaderboard.jpeg)
 
 ### Team Result Page
 Full score breakdown for a single team, with a downloadable feedback report and editable dimension scores.
 
-![Team result page showing dimension scores and AI feedback report](./docs/screenshots/team-result.png)
+![Team result page showing dimension scores and AI feedback report](./docs/screenshots/docs/screenshots/Ai-feedback-reportjpeg)
 
 ### Agent Audit View
 See exactly what each AI judge found — strengths, improvements, and evidence — before the chief judge calculated the final score.
 
-![Agent audit view showing individual judge outputs for a submission](./docs/screenshots/agent-audit.png)
+![Agent audit view showing individual judge outputs for a submission](./docs/screenshots/Agent-audit.jpeg)
 
 ---
 
