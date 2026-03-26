@@ -1,75 +1,92 @@
-const Database = require('better-sqlite3');
-const path = require('path');
+const { Pool } = require('pg');
 
-const dbPath = path.join(__dirname, '..', 'orchestra.db');
-const db = new Database(dbPath);
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    require: true,
+  }
+});
 
-console.log('Initializing better-sqlite3 database at:', dbPath);
+console.log('Connecting to NeonDB (PostgreSQL)...');
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS users (
-    id TEXT PRIMARY KEY,
-    email TEXT UNIQUE,
-    name TEXT,
-    picture TEXT,
-    created_at TEXT
-  );
+async function initDB() {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(255) PRIMARY KEY,
+        email VARCHAR(255) UNIQUE,
+        name VARCHAR(255),
+        picture TEXT,
+        created_at TEXT,
+        password_hash TEXT
+      );
 
-  CREATE TABLE IF NOT EXISTS hackathons (
-    id TEXT PRIMARY KEY,
-    judge_id TEXT,
-    name TEXT,
-    description TEXT,
-    created_at TEXT,
-    FOREIGN KEY(judge_id) REFERENCES users(id)
-  );
+      CREATE TABLE IF NOT EXISTS hackathons (
+        id VARCHAR(255) PRIMARY KEY,
+        judge_id VARCHAR(255),
+        name VARCHAR(255),
+        description TEXT,
+        created_at TEXT,
+        FOREIGN KEY(judge_id) REFERENCES users(id) ON DELETE SET NULL
+      );
 
-  CREATE TABLE IF NOT EXISTS submissions (
-    id TEXT PRIMARY KEY,
-    hackathon_id TEXT,
-    team_name TEXT,
-    raw_content TEXT,
-    prototype_url TEXT,
-    total_score REAL,
-    confidence_tier TEXT,
-    dimension_scores TEXT,
-    agent_outputs TEXT,
-    feedback_report TEXT,
-    bias_flags TEXT,
-    created_at TEXT,
-    FOREIGN KEY(hackathon_id) REFERENCES hackathons(id)
-  );
+      CREATE TABLE IF NOT EXISTS submissions (
+        id VARCHAR(255) PRIMARY KEY,
+        hackathon_id VARCHAR(255),
+        team_name VARCHAR(255),
+        raw_content TEXT,
+        prototype_url TEXT,
+        total_score REAL,
+        confidence_tier VARCHAR(50),
+        dimension_scores TEXT,
+        agent_outputs TEXT,
+        feedback_report TEXT,
+        bias_flags TEXT,
+        created_at TEXT,
+        FOREIGN KEY(hackathon_id) REFERENCES hackathons(id) ON DELETE CASCADE
+      );
 
-  CREATE TABLE IF NOT EXISTS overrides (
-    id TEXT PRIMARY KEY,
-    submission_id TEXT,
-    dimension TEXT,
-    original_score REAL,
-    new_score REAL,
-    reason TEXT,
-    judge_name TEXT,
-    created_at TEXT,
-    FOREIGN KEY(submission_id) REFERENCES submissions(id)
-  );
-`);
+      CREATE TABLE IF NOT EXISTS overrides (
+        id VARCHAR(255) PRIMARY KEY,
+        submission_id VARCHAR(255),
+        dimension VARCHAR(50),
+        original_score REAL,
+        new_score REAL,
+        reason TEXT,
+        judge_name VARCHAR(255),
+        created_at TEXT,
+        FOREIGN KEY(submission_id) REFERENCES submissions(id) ON DELETE CASCADE
+      );
+    `);
 
-// Safely attempt to add columns if table already existed without them from the previous prototype version
-try {
-  db.exec('ALTER TABLE submissions ADD COLUMN hackathon_id TEXT');
-} catch (e) {
-  // Ignore if column already exists
+    // Safely attempt to add columns if table already existed without them
+    try {
+      await client.query('ALTER TABLE submissions ADD COLUMN hackathon_id VARCHAR(255)');
+    } catch (e) {
+      // Ignore if column already exists (PG throws 42701 duplicate_column)
+    }
+
+    try {
+      await client.query('ALTER TABLE hackathons ADD COLUMN judge_id VARCHAR(255)');
+    } catch (e) {
+      // Ignore if column already exists
+    }
+
+    try {
+      await client.query('ALTER TABLE users ADD COLUMN password_hash TEXT');
+    } catch (e) {
+      // Ignore if column already exists
+    }
+
+    console.log('NeonDB tables initialized/patched successfully.');
+  } catch (err) {
+    console.error('Failed to initialize NeonDB tables:', err);
+  } finally {
+    client.release();
+  }
 }
 
-try {
-  db.exec('ALTER TABLE hackathons ADD COLUMN judge_id TEXT');
-} catch (e) {
-  // Ignore if column already exists
-}
+initDB();
 
-try {
-  db.exec('ALTER TABLE users ADD COLUMN password_hash TEXT');
-} catch (e) {
-  // Ignore if column already exists
-}
-
-module.exports = db;
+module.exports = pool;

@@ -11,8 +11,28 @@ async function parsePptx(fileSource) {
   try {
     if (typeof fileSource === 'string' && fileSource.startsWith('http')) {
       isTemp = true;
+      let downloadUrl = fileSource;
+      
+      // Convert Google Drive presentation URLs to direct download links
+      const gDriveDeckMatch = downloadUrl.match(/docs\.google\.com\/presentation\/d\/([a-zA-Z0-9-_]+)/);
+      if (gDriveDeckMatch) {
+        downloadUrl = `https://docs.google.com/presentation/d/${gDriveDeckMatch[1]}/export/pptx`;
+      } else {
+        // Convert general Google Drive file URLs
+        const gDriveFileMatch = downloadUrl.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9-_]+)/);
+        if (gDriveFileMatch) {
+          downloadUrl = `https://drive.google.com/uc?export=download&id=${gDriveFileMatch[1]}`;
+        }
+      }
+
+      // Convert Dropbox URLs to direct download links
+      if (downloadUrl.includes('dropbox.com') && !downloadUrl.includes('dl=1')) {
+        downloadUrl = downloadUrl.replace(/\?dl=0/g, '').replace(/&dl=0/g, '');
+        downloadUrl += downloadUrl.includes('?') ? '&dl=1' : '?dl=1';
+      }
+
       const response = await axios({
-        url: fileSource,
+        url: downloadUrl,
         method: 'GET',
         responseType: 'stream'
       });

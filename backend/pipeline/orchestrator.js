@@ -38,7 +38,7 @@ async function orchestrate(files, inputs) {
 
   const audit = await biasAuditor(judgeOutputs);
   const chief = await chiefJudge(judgeOutputs, audit);
-  const feedback = feedbackEngine(judgeOutputs, chief, audit);
+  const feedback = await feedbackEngine(judgeOutputs, chief, audit);
 
   return { judgeOutputs, audit, chief, feedback, rawContent: content };
 }
