@@ -40,7 +40,7 @@ export default function HackathonDetailPage() {
     setHackathonId(id);
 
     if (id) {
-      fetch(`http://localhost:8000/api/leaderboard/${id}`)
+      fetch(`https://orchestra-w0rz.onrender.com/api/leaderboard/${id}`)
         .then(res => res.json())
         .then(resData => {
           if (resData.success) setData(resData.data);

@@ -53,7 +53,7 @@ export default function UploadPage() {
   const pollProgress = (hackathon_id: string) => {
     intervalRef.current = setInterval(async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/hackathon/progress/${hackathon_id}`);
+        const res = await fetch(`https://orchestra-w0rz.onrender.com/api/hackathon/progress/${hackathon_id}`);
         const data = await res.json();
         if (data.success) {
           setProgress(data.data);
@@ -88,7 +88,7 @@ export default function UploadPage() {
     formData.append('csv_file', file);
 
     try {
-      const res = await fetch('http://localhost:8000/api/hackathon/upload', {
+      const res = await fetch('https://orchestra-w0rz.onrender.com/api/hackathon/upload', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

@@ -37,8 +37,8 @@ export default function HackathonsPage() {
     }
 
     Promise.all([
-      fetch('http://localhost:8000/api/hackathons').then(r => r.json()),
-      fetch('http://localhost:8000/api/leaderboard').then(r => r.json()),
+      fetch('https://orchestra-w0rz.onrender.com/api/hackathons').then(r => r.json()),
+      fetch('https://orchestra-w0rz.onrender.com/api/leaderboard').then(r => r.json()),
     ])
       .then(([hackRes, lbRes]) => {
         if (hackRes.success) setHackathons(hackRes.data);

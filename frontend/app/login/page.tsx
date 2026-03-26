@@ -20,7 +20,7 @@ export default function LoginPage() {
     setError("");
     
     try {
-      const res = await fetch('http://localhost:8000/api/auth/login', {
+      const res = await fetch('https://orchestra-w0rz.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -46,7 +46,7 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch('http://localhost:8000/api/auth/google', {
+      const res = await fetch('https://orchestra-w0rz.onrender.com/api/auth/google', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: credentialResponse.credential }),

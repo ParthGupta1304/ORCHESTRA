@@ -229,7 +229,7 @@ cd frontend
 npm run dev
 ```
 
-Open `http://localhost:3000` in your browser.
+Open your browser and go to `https://orchestra-eosin.vercel.app/`.
 
 ---
 

@@ -32,8 +32,8 @@ export default function DashboardPage() {
     const headers = { 'Authorization': `Bearer ${token}` };
 
     Promise.all([
-      fetch('http://localhost:8000/api/stats').then(r => r.json()),
-      fetch('http://localhost:8000/api/organizer/hackathons', { headers }).then(r => r.json()),
+      fetch('https://orchestra-w0rz.onrender.com/api/stats').then(r => r.json()),
+      fetch('https://orchestra-w0rz.onrender.com/api/organizer/hackathons', { headers }).then(r => r.json()),
     ])
       .then(([statsRes, hackRes]) => {
         if (statsRes.success) setStats(statsRes.data);

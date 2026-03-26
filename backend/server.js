@@ -30,7 +30,10 @@ const { submitSchema } = require('./models/schemas');
 const { orchestrate } = require('./pipeline/orchestrator');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['https://orchestra-eosin.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

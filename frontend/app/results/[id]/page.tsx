@@ -81,7 +81,7 @@ export default function ResultDetailsPage() {
     setSubmissionId(resultId);
 
     if (resultId) {
-      fetch(`http://localhost:8000/api/results/${resultId}`)
+      fetch(`https://orchestra-w0rz.onrender.com/api/results/${resultId}`)
         .then((res) => res.json())
         .then((resData) => {
           if (resData.success) setData(resData.data);
@@ -95,7 +95,7 @@ export default function ResultDetailsPage() {
     setOverrideSaving(true);
 
     try {
-      const res = await fetch(`http://localhost:8000/api/override/${submissionId}`, {
+      const res = await fetch(`https://orchestra-w0rz.onrender.com/api/override/${submissionId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -108,7 +108,7 @@ export default function ResultDetailsPage() {
       const result = await res.json();
       if (result.success) {
         // Refresh data
-        const refreshRes = await fetch(`http://localhost:8000/api/results/${submissionId}`);
+        const refreshRes = await fetch(`https://orchestra-w0rz.onrender.com/api/results/${submissionId}`);
         const refreshData = await refreshRes.json();
         if (refreshData.success) setData(refreshData.data);
         setOverrideOpen(null);
