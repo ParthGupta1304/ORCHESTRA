@@ -55,6 +55,7 @@ See exactly what each AI judge found — strengths, improvements, and evidence �
 
 Every submission is scored out of **100 points** across five categories. The five judge agents run in parallel, then the bias auditor and chief judge run on their combined outputs.
 
+<<<<<<< HEAD
 | Category     | Max | What it looks at |
 |:-------------|:---:|:-----------------|
 | Innovation   | 25  | Originality of the idea, creative problem-solving |
@@ -62,6 +63,15 @@ Every submission is scored out of **100 points** across five categories. The fiv
 | Business     | 15  | Market opportunity, feasibility, monetization angle |
 | Presentation | 15  | Pitch deck quality and storytelling |
 | Clarity      | 20  | How well the problem and solution are communicated |
+=======
+| Category     | Max Score | What it looks at                                      |
+| ------------ | --------- | ----------------------------------------------------- |
+| Innovation   | 25        | Uniqueness of the idea and creative problem-solving   |
+| Technical    | 25        | Code quality, architecture, and technical complexity  |
+| Business     | 15        | Market opportunity, feasibility, and monetization     |
+| Presentation | 15        | Clarity of the pitch deck and storytelling            |
+| Clarity      | 20        | How clearly the problem and solution are communicated |
+>>>>>>> d1db7eb (readme and minor change)
 
 After scoring, the chief judge assigns one of three confidence tiers:
 
@@ -163,6 +173,7 @@ ORBIX/
 
 Column names are matched case-insensitively, so variations like `"Team Name"` or `"team name"` both work.
 
+<<<<<<< HEAD
 | Column         | Accepted names                                              | Required |
 |:---------------|:------------------------------------------------------------|:--------:|
 | Team name      | team name, team, project name, project                      | ✅ |
@@ -171,6 +182,16 @@ Column names are matched case-insensitively, so variations like `"Team Name"` or
 | Prototype URL  | prototype url, prototype, demo link, demo                   | ❌ |
 
 *At least one of GitHub URL or Pitch deck URL is required per row.
+=======
+| Column         | Accepted Variations                                | Required |
+| -------------- | -------------------------------------------------- | -------- |
+| Team name      | team name, team, project name, project             | Yes      |
+| GitHub URL     | github url, github, repo url, repo                 | Yes\*    |
+| Pitch deck URL | pitch deck url, pitch deck, presentation, pptx url | Yes\*    |
+| Prototype URL  | prototype url, prototype, demo link, demo          | No       |
+
+\*At least one of GitHub URL or Pitch deck URL must be present for a row to be evaluated.
+>>>>>>> d1db7eb (readme and minor change)
 
 ---
 
